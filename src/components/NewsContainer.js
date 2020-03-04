@@ -15,6 +15,7 @@ class NewsContainer extends Component {
 			{name: "index", url:"https://index.hu/24ora/rss/"},
 			{name: "444", url:"https://cors-anywhere.herokuapp.com/https://444.hu/feed"},
 			{name: "hvg", url:"https://cors-anywhere.herokuapp.com/https://hvg.hu/rss"},
+			{name: "24.hu", url:"https://24.hu/feed/"},
 		]
 	}
 
