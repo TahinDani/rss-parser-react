@@ -11,16 +11,35 @@ class NewsContainer extends Component {
 		this.state = {
 			news: []
 		}
+		this.sites = [
+			{name: "index", url:"https://index.hu/24ora/rss/"},
+			{name: "444", url:"https://cors-anywhere.herokuapp.com/https://444.hu/feed"},
+			{name: "hvg", url:"https://cors-anywhere.herokuapp.com/https://hvg.hu/rss"},
+		]
 	}
 
 	componentDidMount(){
 		this.getNews()
 	}
-	
-	getNews = async (url) => {
-		const feed = await parser.parseURL('https://index.hu/24ora/rss/')
-		console.log(feed);
-		let news = feed.items.map(item => ({id: item.guid, title: item.title, link: item.link, content: item.content})) // TODO: filter different categories
+
+	getNews = async () => {
+		let news = []
+		for (let site of this.sites) {
+			let feed = await parser.parseURL(site.url)
+			console.log(feed);
+			let feedItems = feed.items.map(item => ({
+				id: item.link, 
+				title: item.title, 
+				link: item.link, 
+				content: item.content.trim(),
+				date: item.isoDate,
+				categories: item.categories
+			}))
+			news = [...news, ...feedItems]
+		}
+		news.sort((a, b) => new Date(b.date) - new Date(a.date))
+		console.log("sorted?");
+		console.log(news);
 		this.setState({news: news})
 	}
 
