@@ -1,0 +1,5 @@
+.Navbar {
+	background: rgb(10, 145, 168);
+	display: flex;
+	justify-content: space-between;
+}

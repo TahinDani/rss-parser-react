@@ -9,7 +9,10 @@ function App() {
 		<div className="App">
 			<Navbar />
 			<Switch>
+				<Route exact path="/" render={() => <NewsContainer />}/>
 				<Route exact path="/belfold" render={() => <h1>Belföldi hírek</h1>}/>
+				<Route exact path="/kulfold" render={() => <h1>Külföldi hírek</h1>}/>
+				<Route exact path="/gazdasag" render={() => <h1>Gazdasági hírek</h1>}/>
 			</Switch>
 			{/* <NewsContainer /> */}
 		</div>
