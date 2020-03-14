@@ -8,7 +8,7 @@ class Navbar extends Component {
 		return (
 			<div className="Navbar">
 				<h2 className="Navbar-title">MINDex</h2>
-				<Link exact to="/">Összes</Link>
+				<Link exact to="/all">Összes</Link>
 				<Link exact to="/belfold">Belföld</Link>
 				<Link exact to="/kulfold">Külföld</Link>
 				<Link exact to="/gazdasag">Gazdaság</Link>

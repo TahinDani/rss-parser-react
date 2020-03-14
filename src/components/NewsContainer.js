@@ -45,18 +45,23 @@ class NewsContainer extends Component {
 	}
 
 	render() {
-		return (
-			<div>
-				{this.state.news.map(n =>
-					<News
+		if (['all', 'belfold', 'kulfold', 'gazdasag'].includes(this.props.match.params.category)) {
+			return (
+				<div>
+					<h1>{this.props.match.params.category}</h1>
+					{/* {this.state.news.map(n =>
+						<News
 						title={n.title}
 						link={n.link}
 						content={n.content}
 						key= {n.id}
 					/>
-				)}
-			</div>
-		);
+					)} */}
+				</div>
+			);
+		} else {
+			return(<h1>404 - NO SUCH PAGE</h1>)
+		}
 	}
 }
 
