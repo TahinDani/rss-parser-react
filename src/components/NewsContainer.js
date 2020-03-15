@@ -11,21 +11,25 @@ class NewsContainer extends Component {
 		this.state = {
 			news: []
 		}
-		this.sites = [
-			{name: "index", url:"https://index.hu/24ora/rss/"},
-			{name: "444", url:"https://cors-anywhere.herokuapp.com/https://444.hu/feed"},
-			{name: "hvg", url:"https://cors-anywhere.herokuapp.com/https://hvg.hu/rss"},
-			{name: "24.hu", url:"https://24.hu/feed/"},
-		]
 	}
 
 	componentDidMount(){
+		console.log("COMPONENT DID MOUNT");
 		this.getNews()
 	}
 
+	componentDidUpdate(prevProps){
+		console.log("COMPONENT DID UPDATE");
+		if (this.props.match.params.category !== prevProps.match.params.category) {
+			console.log(this.props.match.params.category);
+		}
+	}
+
 	getNews = async () => {
-		let news = []
-		for (let site of this.sites) {
+		console.log(this.props.match.params.category);
+		
+		/* let news = []
+		for (let site of this.props.sites) {
 			let feed = await parser.parseURL(site.url)
 			console.log(feed);
 			let feedItems = feed.items.map(item => ({
@@ -41,11 +45,11 @@ class NewsContainer extends Component {
 		news.sort((a, b) => new Date(b.date) - new Date(a.date))
 		console.log("sorted?");
 		console.log(news);
-		this.setState({news: news})
+		this.setState({news: news}) */
 	}
 
 	render() {
-		if (['all', 'belfold', 'kulfold', 'gazdasag'].includes(this.props.match.params.category)) {
+		if (['osszes', 'belfold', 'kulfold', 'gazdasag'].includes(this.props.match.params.category)) {
 			return (
 				<div>
 					<h1>{this.props.match.params.category}</h1>
