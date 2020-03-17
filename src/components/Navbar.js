@@ -8,7 +8,7 @@ class Navbar extends Component {
 		return (
 			<div className="Navbar">
 				<h2 className="Navbar-title">MINDex</h2>
-				{this.props.categories.map(c => <Link key={c} exact="true" to={deburr(c).toLowerCase()} onClick={() => this.props.onCategoryChange(c)}>{c}</Link>)}
+				{this.props.categories.map(c => <Link key={c} exact="true" to={deburr(c).toLowerCase()} onClick={() => this.props.onCategoryChange(deburr(c).toLowerCase())}>{c}</Link>)}
 				{this.props.sources.map(s => {
 					return(
 					<div key={s.name}>

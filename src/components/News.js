@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
+import '../style/News.css'
 
 class News extends Component {
 	
 	render() {
 		return (
-			<div>
-				<h1>{this.props.site + ' ' + this.props.title}</h1>
-				<a href={this.props.link}>{this.props.content || "Link"}</a>
+			<div className='News'>
+				<p>{this.props.newsItem.category} <strong>{this.props.newsItem.site}</strong> {this.props.newsItem.title}</p>
+				<a href={this.props.newsItem.link}>{this.props.newsItem.content || "Link"}</a>
 			</div>
 		);
 	}

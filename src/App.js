@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import React, { Component } from 'react'
+import { Route, Switch, Redirect } from 'react-router-dom'
 import Parser from 'rss-parser'
-import './App.css';
+import deburr from 'lodash.deburr'
+import './App.css'
 import NewsContainer from './components/NewsContainer'
 import Navbar from './components/Navbar'
 
-let parser = new Parser();
+let parser = new Parser()
 
 class App extends Component {
 	static defaultProps = {
@@ -13,32 +14,41 @@ class App extends Component {
 	}
 
 	constructor(props) {
-		super(props);
+		super(props)
 		this.state = {
-			sites: [
-				{name: "index", url:"https://index.hu/24ora/rss/", selected:true},
-				{name: "444", url:"https://cors-anywhere.herokuapp.com/https://444.hu/feed", selected:true},
-				{name: "hvg", url:"https://cors-anywhere.herokuapp.com/https://hvg.hu/rss", selected:true},
-				{name: "24.hu", url:"https://24.hu/feed/", selected:false},
-			],
-			currentCategory: "",
-			news: []
+			sites: this.getInitialSites(),
+			currentCategory: this.getInitialCategory(),
+			news: [],
+			loading: false,
 		}
 	}
 
+	getInitialCategory =() => {
+		let selectedCategory = localStorage.getItem( 'selectedCategory' ) || "osszes"
+		return selectedCategory
+	}
+
+	getInitialSites = () => {
+		let sites = [
+			{name: "index", url:"https://index.hu/24ora/rss/", selected:true},
+			{name: "444", url:"https://cors-anywhere.herokuapp.com/https://444.hu/feed", selected:true},
+			{name: "hvg", url:"https://cors-anywhere.herokuapp.com/https://hvg.hu/rss", selected:false},
+			{name: "24.hu", url:"https://24.hu/feed/", selected:false},
+		]
+		let localSelectedSites = localStorage.getItem("sites") || sites.map(s => s.name)
+		localStorage.setItem("sites", localSelectedSites)
+		return sites.map(s => ({...s, selected:localSelectedSites.includes(s.name)}))
+	}
+
 	componentDidMount(){
-		console.log("COMPONENT DID MOUNT");
-		this.getNews()
+		console.log("COMPONENT DID MOUNT")
+		this.setState({loading: true}, this.getNews)
 	}
 
 	componentDidUpdate(prevProps, prevState){
-		console.log("COMPONENT DID UPDATE");
-		
-		for (const i of this.state.sites){console.log(i.name, i.selected)}
-
+		console.log("COMPONENT DID UPDATE")
 		if (this.state.currentCategory !== prevState.currentCategory) {
-			console.log("COMPONENT DID UPDATE CONDITION");
-			
+			console.log("INSIDE COMPONENT DID UPDATE CONDITION");
 			console.log(this.state.currentCategory);
 			this.getNews()
 		}
@@ -46,13 +56,71 @@ class App extends Component {
 
 	handleSiteChange = (e) => {
 		let clickedSite = e.target.name
+		this.handleLocalStorageSites(clickedSite)
 		this.setState(st => ({
+			loading: true,
 			sites: st.sites.map(s => s.name === clickedSite ? {...s, selected:!s.selected} : s)
 		}), this.getNews )
 	}
 
+	handleLocalStorageSites = (site) => {
+		let localSites = localStorage.getItem("sites") || ""
+		if (localSites.includes(site)) {
+			let newSites = localSites.split(',').filter(s => s !== site)
+			localStorage.setItem("sites", newSites)
+		} else {
+			let newSites = [localSites, site]
+			localStorage.setItem("sites", newSites)
+		}
+	}
+	
 	handleCategoryChange = (category) => {
-		this.setState({currentCategory: category})
+		localStorage.setItem('selectedCategory', category)
+		this.setState({loading: true, currentCategory: category})
+	}
+	
+	get444caterory = (feedItem) => {
+		if (feedItem.categories.includes('külföld')){
+			return 'kulfold'
+		} else if (feedItem.categories.includes('gazdaság')){
+			return 'gazdasag'
+		} else {
+			return 'belfold'
+		}	
+	}
+
+	getHvgCategory = (feedItem) => {
+		let category = feedItem.link.split("/")[3]
+		switch (category) {
+			case 'itthon':
+			case 'cegauto':
+				return 'belfold'
+			case 'vilag':
+				return 'kulfold'
+			case 'gazdasag':
+			case 'kkv':
+				return 'gazdasag'
+			default:
+				return category
+		}
+	}
+
+	get24huCategory = (feedItem) => {
+		let category = deburr(feedItem.categories[0]).toLowerCase()
+		return category === 'nagyvilag' ? 'kulfold' : category
+	}
+
+	getCategory = (site, feedItem) => {
+		const lowercaseSite = site.toLowerCase()
+		if (lowercaseSite.includes("index")) {
+			return feedItem.link.split("/")[3]
+		} else if (lowercaseSite.includes("444")) {
+			return this.get444caterory(feedItem)
+		} else if (lowercaseSite.includes("hvg")) {
+			return this.getHvgCategory(feedItem)
+		} else if (lowercaseSite.includes("24.hu")) {
+			return this.get24huCategory(feedItem)
+		}
 	}
 
 	getNews = async () => {
@@ -60,7 +128,7 @@ class App extends Component {
 		for (let site of this.state.sites) {
 			if (site.selected) {
 				let feed = await parser.parseURL(site.url)
-				console.log(feed);
+				console.log(feed)
 				let feedItems = feed.items.map(item => ({
 					site: feed.title,
 					id: item.link, 
@@ -68,15 +136,17 @@ class App extends Component {
 					link: item.link, 
 					content: item.content.trim(),
 					date: item.isoDate,
-					categories: item.categories
+					category: this.getCategory(feed.title, item)
 				}))
+				if (this.state.currentCategory !== 'osszes') {
+					feedItems = feedItems.filter(item => item.category === this.state.currentCategory)
+				}
 				news = [...news, ...feedItems]
 			}
 		}
 		news.sort((a, b) => new Date(b.date) - new Date(a.date))
-		console.log("sorted?");
-		console.log(news);
-		this.setState({news: news})
+		//console.log(news)
+		this.setState({news: news, loading: false})
 	}
 
 	render(){
@@ -85,7 +155,12 @@ class App extends Component {
 				<Navbar categories={this.props.categories} sources={this.state.sites} handleChange={this.handleSiteChange} onCategoryChange={this.handleCategoryChange}/>
 				<Switch>
 					<Route exact path="/" render={() => <Redirect to="/osszes" />}/>
-					<Route exact path="/:category" render={(routeProps) => <NewsContainer {...routeProps} sites={this.state.sites} news={this.state.news}/>}/>
+					<Route exact path="/:category" render={(routeProps) => {
+						return !this.state.loading ? 
+							<NewsContainer {...routeProps} sites={this.state.sites} news={this.state.news}/> : 
+							<h1>LOADING</h1>
+						}
+					}/>
 				</Switch>
 			</div>
 		);
