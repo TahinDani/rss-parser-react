@@ -41,7 +41,7 @@ class App extends Component {
 	}
 
 	componentDidMount(){
-		if (['osszes', 'belfold', 'kulfold', 'gazdasag'].includes(this.props.location.pathname.slice(1))) {
+		if (['osszes', 'belfold', 'kulfold', 'gazdasag'].includes(this.props.location.pathname.slice(1))) { // TODO: there's need to be a better way
 			this.setState({loading: true}, this.getNews)
 		} else {
 			this.setState({currentCategory: undefined})
@@ -157,9 +157,14 @@ class App extends Component {
 	render(){
 		return (
 			<div className="App">
-				<Navbar categories={this.props.categories} sources={this.state.sites} handleChange={this.handleSiteChange} onCategoryChange={this.handleCategoryChange}/>
+				<Navbar 
+					categories={this.props.categories}
+					sources={this.state.sites}
+					handleChange={this.handleSiteChange}
+					onCategoryChange={this.handleCategoryChange}
+					isLoading={this.state.loading}
+				/>
 				<Switch>
-					
 					<Route exact path="/:category" render={(routeProps) => {
 						if (!this.state.currentCategory) {
 							return <h1>404 - NO SUCH ROUTE</h1>
