@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Route, Switch, Redirect } from 'react-router-dom'
+import { Route, Switch, Redirect, withRouter } from 'react-router-dom'
 import Parser from 'rss-parser'
 import deburr from 'lodash.deburr'
 import './App.css'
@@ -41,17 +41,19 @@ class App extends Component {
 	}
 
 	componentDidMount(){
-		console.log("COMPONENT DID MOUNT")
-		this.setState({loading: true}, this.getNews)
+		if (['osszes', 'belfold', 'kulfold', 'gazdasag'].includes(this.props.location.pathname.slice(1))) {
+			this.setState({loading: true}, this.getNews)
+		} else {
+			this.setState({currentCategory: undefined})
+		}
 	}
 
-	componentDidUpdate(prevProps, prevState){
-		console.log("COMPONENT DID UPDATE")
-		if (this.state.currentCategory !== prevState.currentCategory) {
-			console.log("INSIDE COMPONENT DID UPDATE CONDITION");
-			console.log(this.state.currentCategory);
-			this.getNews()
-		}
+	componentDidUpdate(){
+		// need to handle category change from undefined to 'osszes' when redirected from '/' to '/osszes'
+		if (this.state.currentCategory === undefined && 
+			this.props.location.pathname.slice(1) === 'osszes') {
+				this.handleCategoryChange('osszes')	
+			}
 	}
 
 	handleSiteChange = (e) => {
@@ -76,8 +78,10 @@ class App extends Component {
 	
 	handleCategoryChange = (category) => {
 		localStorage.setItem('selectedCategory', category)
-		this.setState({loading: true, currentCategory: category})
-	}
+		if (this.state.currentCategory !== category) {
+			this.setState({loading: true, currentCategory: category}, this.getNews)
+			}
+		}
 	
 	get444caterory = (feedItem) => {
 		if (feedItem.categories.includes('külföld')){
@@ -138,6 +142,7 @@ class App extends Component {
 					date: item.isoDate,
 					category: this.getCategory(feed.title, item)
 				}))
+				// TODO: it's not really optimal, can this be filtered earlier?
 				if (this.state.currentCategory !== 'osszes') {
 					feedItems = feedItems.filter(item => item.category === this.state.currentCategory)
 				}
@@ -154,17 +159,21 @@ class App extends Component {
 			<div className="App">
 				<Navbar categories={this.props.categories} sources={this.state.sites} handleChange={this.handleSiteChange} onCategoryChange={this.handleCategoryChange}/>
 				<Switch>
-					<Route exact path="/" render={() => <Redirect to="/osszes" />}/>
+					
 					<Route exact path="/:category" render={(routeProps) => {
-						return !this.state.loading ? 
-							<NewsContainer {...routeProps} sites={this.state.sites} news={this.state.news}/> : 
-							<h1>LOADING</h1>
+						if (!this.state.currentCategory) {
+							return <h1>404 - NO SUCH ROUTE</h1>
+						} else if (this.state.loading) {
+							return <h1>LOADING</h1>
+						} else {
+							return <NewsContainer {...routeProps} news={this.state.news}/>
 						}
-					}/>
+					}}/>
+					<Redirect from='/' to='/osszes' />
 				</Switch>
 			</div>
-		);
+		)
 	}
 }
 
-export default App;
+export default withRouter(App)
