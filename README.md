@@ -8,6 +8,7 @@ You can filter the news by category and/or source. Initially it shows all the ne
 Design plans:
 
 ![screenshot without filter][screenshot_without_filter]
+***
 ![screenshot with filter][screenshot_with_filter]
 
 [screenshot_without_filter]: public/layout_demo/layout_all.png

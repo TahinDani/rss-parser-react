@@ -164,18 +164,20 @@ class App extends Component {
 					onCategoryChange={this.handleCategoryChange}
 					isLoading={this.state.loading}
 				/>
-				<Switch>
-					<Route exact path="/:category" render={(routeProps) => {
-						if (!this.state.currentCategory) {
-							return <h1>404 - NO SUCH ROUTE</h1>
-						} else if (this.state.loading) {
-							return <h1>LOADING</h1>
-						} else {
-							return <NewsContainer {...routeProps} news={this.state.news}/>
-						}
-					}}/>
-					<Redirect from='/' to='/osszes' />
-				</Switch>
+				<div className="container">
+					<Switch>
+						<Route exact path="/:category" render={(routeProps) => {
+							if (!this.state.currentCategory) {
+								return <h1>404 - NO SUCH ROUTE</h1>
+							} else if (this.state.loading) {
+								return <h1>LOADING</h1>
+							} else {
+								return <NewsContainer {...routeProps} news={this.state.news}/>
+							}
+						}}/>
+						<Redirect from='/' to='/osszes' />
+					</Switch>
+				</div>
 			</div>
 		)
 	}
