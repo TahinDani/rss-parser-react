@@ -1,22 +1,22 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
 import News from './News'
+import '../style/NewsContainer.css'
 
 class NewsContainer extends Component {
 
 	render() {
-			return (
-				<div>
-					<h1>{this.props.match.params.category}</h1>
-					{this.props.news.map(n =>
-						<News
+		return (
+			<div className="NewsContainer">
+				{this.props.news.map(n =>
+					<News
 						newsItem={n}
 						key={n.link}
 					/>
-					)}
-				</div>
-			)
+				)}
+			</div>
+		)
 	}
 }
 
-export default NewsContainer;
+export default NewsContainer
