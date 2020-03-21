@@ -138,9 +138,10 @@ class App extends Component {
 					id: item.link, 
 					title: item.title, 
 					link: item.link, 
-					content: item.content.trim(),
+					content: feed.title === "444" ? item.contentSnippet : item.content.trim(),
 					date: item.isoDate,
-					category: this.getCategory(feed.title, item)
+					category: this.getCategory(feed.title, item),
+					imageUrl: !(feed.title === "hvg.hu RSS") && item.enclosure?.url, // don't need hvg images because of shitty quality
 				}))
 				// TODO: it's not really optimal, can this be filtered earlier?
 				if (this.state.currentCategory !== 'osszes') {
@@ -150,7 +151,7 @@ class App extends Component {
 			}
 		}
 		news.sort((a, b) => new Date(b.date) - new Date(a.date))
-		//console.log(news)
+		console.log(news)
 		this.setState({news: news, loading: false})
 	}
 
@@ -168,9 +169,13 @@ class App extends Component {
 					<Switch>
 						<Route exact path="/:category" render={(routeProps) => {
 							if (!this.state.currentCategory) {
-								return <h1>404 - NO SUCH ROUTE</h1>
+								return <h1 style={{marginTop: 100}}>404 - NO SUCH ROUTE</h1>
 							} else if (this.state.loading) {
-								return <h1>LOADING</h1>
+								return (
+								<div class="spinner-border" role="status" style={{marginTop: 100}}>
+									<span className="sr-only">Loading...</span>
+								</div>
+								)
 							} else {
 								return <NewsContainer {...routeProps} news={this.state.news}/>
 							}

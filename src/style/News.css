@@ -1,3 +1,29 @@
 .News{
-	border: 1px solid black;
+	margin: 20px 0;
+	height: 150px;
+	background-color: burlywood;
+}
+
+.News-image{
+	min-width: 250px;
+	overflow: hidden;
+	background-size: cover;
+	background-position: center;
+}
+
+.News-category{
+	background-color: white;
+	font-size: 13px;
+	padding: 0 2px;
+	margin: 5px;
+	float: left;
+}
+
+.News-text{
+	padding: 10px;
+	text-align: start;
+}
+
+.News-text a {
+	color: black;
 }
