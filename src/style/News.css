@@ -1,14 +1,13 @@
 .News{
-	margin: 20px 0;
-	height: 150px;
-	background-color: burlywood;
+	margin: 2em 0;
+	border: none;
 }
 
 .News-image{
-	min-width: 250px;
-	overflow: hidden;
+	height: 200px;
 	background-size: cover;
 	background-position: center;
+	padding: 0;
 }
 
 .News-category{
@@ -28,7 +27,22 @@
 	color: black;
 }
 
+.News-content{
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 3; /* number of lines to show */
+	-webkit-box-orient: vertical;
+}
+
 .News-title{
-	font-size: 20px;
+	font-size: 1.3em;
 	font-weight: 600;
+}
+
+@media screen and (min-width: 768px) {
+	.News-date{
+		position: absolute; 
+		bottom: 0;
+	}
 }

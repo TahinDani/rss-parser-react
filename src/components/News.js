@@ -29,17 +29,24 @@ class News extends Component {
 		const imageUrl = this.props.newsItem.imageUrl
 		const siteBackgroundColor = this.getBackgroundColor(this.props.newsItem.site)
 		return (
-			<div className='News d-flex' style={{backgroundColor:siteBackgroundColor}}>
-				
-				<div className="News-image" style={{backgroundImage: `url(${imageUrl})`}}>
-					<div className="News-category">{this.props.newsItem.category}</div>
-				</div> 
-				
-				<div className="News-text">
-					<p className="News-title">{this.props.newsItem.title}</p>
-					<a href={this.props.newsItem.link}>{this.props.newsItem.content || 'Link'}</a>
+			<div className="News card">
+				<div className="row no-gutters" style={{backgroundColor:siteBackgroundColor}}>
+					{/*  */}
+					<div className={"News-image col-md-4 " + (imageUrl ? "" : "d-none") + " d-md-block"} style={{backgroundImage: `url(${imageUrl})`}}>
+						<div className="News-category">{this.props.newsItem.category}</div>
+					</div>
+					<div className={"col-md-4 " + (imageUrl ? "d-none" : "d-block") + " d-md-none"} >
+						<div className="News-category">{this.props.newsItem.category}</div>
+					</div>
+					<div className="col-md-8" >
+						<div className="News-text card-body">
+							<p className="News-title">{this.props.newsItem.title}</p>
+							<a className="News-content" href={this.props.newsItem.link}>{this.props.newsItem.content || 'Link'}</a>
+							<p className="News-date card-text"><small>{new Date(this.props.newsItem.date).toLocaleString('hu-HU')}</small></p>
+						</div>
+					</div>
 				</div>
-			</div>
+			</div>	
 		)
 	}
 }
