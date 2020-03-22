@@ -5,6 +5,7 @@ import deburr from 'lodash.deburr'
 import './App.css'
 import NewsContainer from './components/NewsContainer'
 import Navbar from './components/Navbar'
+import Fof from './components/Fof'
 
 let parser = new Parser()
 
@@ -169,7 +170,8 @@ class App extends Component {
 					<Switch>
 						<Route exact path="/:category" render={(routeProps) => {
 							if (!this.state.currentCategory) {
-								return <h1 style={{marginTop: 100}}>404 - NO SUCH ROUTE</h1>
+								/* return <h1 style={{marginTop: 100}}>404 - NO SUCH ROUTE</h1> */
+								return <Fof />
 							} else if (this.state.loading) {
 								return (
 								<div class="spinner-border" role="status" style={{marginTop: 100}}>
