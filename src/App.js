@@ -85,9 +85,12 @@ class App extends Component {
 		}
 	
 	get444caterory = (feedItem) => {
-		if (feedItem.categories.includes('külföld')){
+		// 444 has very inconsistent and unpredictable category usage so I consider 
+		// every news as 'belfold' where there is no 'külföld' or 'gazdaság' in
+		// the categories array
+		if (feedItem.categories.toString().toLowerCase().includes('külföld')){ // to find "Külföld"
 			return 'kulfold'
-		} else if (feedItem.categories.includes('gazdaság')){
+		} else if (feedItem.categories.toString().toLowerCase().includes('gazdaság')){ // to find "Gazdaság"
 			return 'gazdasag'
 		} else {
 			return 'belfold'
@@ -95,6 +98,7 @@ class App extends Component {
 	}
 
 	getHvgCategory = (feedItem) => {
+		// get the category from the link
 		let category = feedItem.link.split("/")[3]
 		switch (category) {
 			case 'itthon':
@@ -111,6 +115,8 @@ class App extends Component {
 	}
 
 	get24huCategory = (feedItem) => {
+		// consider the first element of the categories array as the main category
+		// change 'nagyvilag' to 'kulfold' 
 		let category = deburr(feedItem.categories[0]).toLowerCase()
 		return category === 'nagyvilag' ? 'kulfold' : category
 	}
@@ -166,14 +172,14 @@ class App extends Component {
 					onCategoryChange={this.handleCategoryChange}
 					isLoading={this.state.loading}
 				/>
-				<div className="container">
+				<div className="container-lg">
 					<Switch>
 						<Route exact path="/:category" render={(routeProps) => {
 							if (!this.state.currentCategory) {
 								return <Fof />
 							} else if (this.state.loading) {
 								return (
-								<div class="spinner-border" role="status" style={{marginTop: 100}}>
+								<div className="spinner-border" role="status" style={{marginTop: 100}}>
 									<span className="sr-only">Loading...</span>
 								</div>
 								)

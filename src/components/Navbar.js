@@ -22,7 +22,7 @@ class Navbar extends Component {
 									className="nav-item nav-link"
 									activeClassName="Navbar-selected-category"
 									key={c}
-									exact="true"
+									exact={true}
 									to={deburr(c).toLowerCase()}
 									onClick={() => this.props.onCategoryChange(deburr(c).toLowerCase())}>{c}
 								</NavLink>
