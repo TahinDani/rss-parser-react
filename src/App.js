@@ -34,7 +34,7 @@ class App extends Component {
 			{name: "index", url:"https://index.hu/24ora/rss/", selected:true},
 			{name: "444", url:"https://cors-anywhere.herokuapp.com/https://444.hu/feed", selected:true},
 			{name: "hvg", url:"https://cors-anywhere.herokuapp.com/https://hvg.hu/rss", selected:false},
-			{name: "24.hu", url:"https://24.hu/feed/", selected:false},
+			{name: "24", url:"https://24.hu/feed/", selected:false},
 		]
 		let localSelectedSites = localStorage.getItem("sites") || sites.map(s => s.name)
 		localStorage.setItem("sites", localSelectedSites)
@@ -170,7 +170,6 @@ class App extends Component {
 					<Switch>
 						<Route exact path="/:category" render={(routeProps) => {
 							if (!this.state.currentCategory) {
-								/* return <h1 style={{marginTop: 100}}>404 - NO SUCH ROUTE</h1> */
 								return <Fof />
 							} else if (this.state.loading) {
 								return (

@@ -20,7 +20,7 @@ class Navbar extends Component {
 								
 								<NavLink 
 									className="nav-item nav-link"
-									activeClassName="Navbar-selected-link"
+									activeClassName="Navbar-selected-category"
 									key={c}
 									exact="true"
 									to={deburr(c).toLowerCase()}
@@ -29,19 +29,22 @@ class Navbar extends Component {
 								
 							)}
 							{this.props.sources.map(s =>
-										
-								<div key={s.name} className="nav-item nav-link">
-									<input type="checkbox"
-										className="Navbar-checkbox"
-										checked={s.selected}
-										onChange={this.props.handleChange}
-										id={s.name} name={s.name}
-										value={s.name}
-										disabled={this.props.isLoading}>
-									</input>
-									<label htmlFor={s.name}>{s.name}</label>
+								
+								<div key={s.name} className="Navbar-site">
+									<div className="nav-item nav-link custom-control custom-checkbox">
+										<input type="checkbox"
+											className="Navbar-checkbox custom-control-input"
+											checked={s.selected}
+											onChange={this.props.handleChange}
+											id={s.name} 
+											name={s.name}
+											value={s.name}
+											disabled={this.props.isLoading}>
+										</input>
+										<label className={`Navbar-label-for-${s.name} custom-control-label`} htmlFor={s.name}>{s.name}</label>
+									</div> 
 								</div>
-										
+
 							)}
 
 						</div>
