@@ -27,3 +27,8 @@
 .News-text a {
 	color: black;
 }
+
+.News-title{
+	font-size: 20px;
+	font-weight: 600;
+}
